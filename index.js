@@ -1,1 +1,0 @@
-import * as fetchStars from "serverAPI.js"
