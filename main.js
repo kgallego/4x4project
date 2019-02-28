@@ -34,7 +34,7 @@ const MONGO_CLIENT = require( 'mongodb' ).MongoClient
 
 const DB_URL = 'mongodb://localhost:27017'
 
-const DB_NAME = 'test'
+const DB_NAME = '4x4'
 
 const DB_CLIENT = new MONGO_CLIENT( DB_URL )
 
@@ -119,9 +119,10 @@ function serverOnResponse( req, res ) {
 
 	let url = URL.parse( req.url, true )
 
-	if ( url.pathname == "/getData" ) {
-		res.writeHead( 403, { "Content-Type": "text/plain" } )
-		res.end( "403: FORBIDDEN" )
+	if ( url.pathname == "/checkEmail" ) {
+		req.on( 'data', function ( data, err ) {
+			checkEmail( JSON.parse( data ).email, res )
+		})
 	} else {
 		returnFile( __dirname + url.pathname, res )
 	}
@@ -148,6 +149,29 @@ function returnFile( path, res ) {
 	fileStream.pipe( res )
 
 }
+
+
+function checkEmail( email, res ) {
+
+	const collection = DB.collection( 'users' )
+	findUser( { email : email }, collection, function( user ) {
+		console.log( user )
+		res.writeHead( 200, {"Content-Type": "text/plain"} )
+		res.end( )
+	})
+
+}
+
+function findUser( query, collection, callback ) {
+	// finds user returns it to callback
+	collection.findOne( query, function( err, data ) {
+		if ( err ) callback( null )
+		callback( data )
+	})
+}
+
+
+
 
 
 
