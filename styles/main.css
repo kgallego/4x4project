@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font: 1em/1.6em sans-serif;
+}
+
+div#login, div#signin, div#signup {
+    width: 60%;
+    margin: auto;
+    padding: 1em;
+    border: 1px solid black;
+}
+
+h1 {
+    text-align: center;
+}
+
+input#textfield {
+    display: block;
+    margin-top: 0.25em;
+    margin-bottom: 1em;
+}
