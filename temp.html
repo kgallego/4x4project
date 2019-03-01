@@ -1,0 +1,46 @@
+<div id="mainApp" class="">
+    <link rel="stylesheet" href="../styles/main.css" />
+    <script></script>
+
+    <h1>This is main page</h1>
+</div>
+<div id="login" class="">
+    <link rel="stylesheet" href="../styles/main.css" />
+    <script src="../src/index.js"></script>
+
+    <h1>Hi there!</h1>
+    <label>Email:</label><br />
+    <input type="text" id="emailInput" class="textfield" /><br />
+
+    <input type="button" id="emailInputConfirm" class="button" value="Enter" onclick="checkEmail( document.getElementById( 'emailInput' ).value )" />
+</div>
+<div id="signin" class="">
+    <link rel="stylesheet" href="../styles/main.css" />
+    <script></script>
+
+    <h1>Sign In</h1>
+
+    <label>Password</label><br />
+    <input type="password" id="signinPassword" class="textfield" /><br />
+
+    <input type="button" id="signinConfirm" class="button" value="Sign In" onclick="signIn( document.getElementById( 'emailInput' ).value, document.getElementById( 'signinPassword' ).value )" />
+</div>
+<div id="signup" class="">
+    <link rel="stylesheet" href="../styles/main.css" />
+    <script></script>
+
+    <h1>Sign Up</h1>
+
+	<label>Nickname</label><br />
+    <input type="text" id="signupName" class="textfield" /><br />
+
+   	<label>Password</label><br />
+    <input type="password" id="signupPassword" class="textfield" /><br />
+
+    <label>Password</label><br />
+    <input type="password" id="signupConfirmPassword" class="textfield" /><br />
+
+
+
+    <input type="button" id="signupConfirm" class="button" value="Sign In" onclick="signUp( document.getElementById( 'emailInput' ).value, document.getElementById( 'signupName' ).value, document.getElementById( 'signupPassword' ).value, document.getElementById( 'signupConfirmPassword' ).value )" />
+</div>
