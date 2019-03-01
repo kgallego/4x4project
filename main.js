@@ -265,16 +265,16 @@ function signUp( newUserdata, res ) {
 					res.writeHead( 400, { "Content-Type": "plain/text" } )
 					res.end( )
 				} else {
-					console.log( result, result._id )
+					console.log( result, result.ops[0]._id )
 					let data = {
-						email: result.email,
-						username: result.email,
-						galaxies: result.galaxies,
-						currentTasks: result.currentTasks,
+						email: result.ops[0].email,
+						username: result.ops[0].email,
+						galaxies: result.ops[0].galaxies,
+						currentTasks: result.ops[0].currentTasks,
 					}
 
 					res.writeHead( 200, {
-						"Set-Cookie": "alauth=" + result._id.toString( ),
+						"Set-Cookie": "alauth=" + result.ops[0]._id.toString( ),
 						"Content-Type": "plain/text",
 					})
 					res.write( JSON.stringify( data ) )
