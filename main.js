@@ -7,6 +7,7 @@ const FS = require( 'fs' )
 const OS = require( 'os' )
 const HTTP = require( 'http' )
 const URL = require( 'url' )
+const CRYPTO = require( 'crypto' )
 
 const SERVER = HTTP.createServer( serverOnResponse )
     SERVER.on( 'error', serverOnError )
@@ -34,7 +35,7 @@ const MONGO_CLIENT = require( 'mongodb' ).MongoClient
 
 const DB_URL = 'mongodb://localhost:27017'
 
-const DB_NAME = 'test'
+const DB_NAME = '4x4'
 
 const DB_CLIENT = new MONGO_CLIENT( DB_URL )
 
@@ -90,6 +91,22 @@ process.on( 'uncaughtException', exitHandler.bind( null, { exit: true } ) )
 
 // EXIT END
 
+// COOKIES START
+// cookie parsing
+function parseCookies( req ) {
+
+	let list = { }
+	let rc = req.headers.cookie
+
+	rc && rc.split( ';' ).forEach( function( cookie ) {
+		let parts = cookie.split( '=' )
+		list[parts.shift().trim()] = decodeURI(parts.join('='))
+	} )
+
+	return list
+
+}
+// COOKIES END
 
 // if server error
 function serverOnError( err ) {
@@ -119,9 +136,25 @@ function serverOnResponse( req, res ) {
 
 	let url = URL.parse( req.url, true )
 
-	if ( url.pathname == "/getData" ) {
-		res.writeHead( 403, { "Content-Type": "text/plain" } )
-		res.end( "403: FORBIDDEN" )
+	if ( url.pathname == "/checkEmail" ) {
+		req.on( 'data', function ( data, err ) {
+			checkEmail( JSON.parse( data ).email, res )
+		})
+	} else if ( url.pathname == "/signIn" ) {
+		req.on( 'data', function ( data, err ) {
+			signIn( JSON.parse( data ), res )
+		})
+	} else if ( url.pathname == "/signUp" ) {
+		req.on( 'data', function ( data, err ) {
+			console.log("data to sign up: %s", data)
+			signUp( JSON.parse( data ), res )
+		})
+	} else if ( url.pathname == "/getAll" ) {
+		getAllUsers( function( users ) {
+			res.writeHead( 200, { "Constent-Type": "text/plain" } )
+			res.write( JSON.stringify( users ) )
+			res.end( )
+		})
 	} else {
 		returnFile( __dirname + url.pathname, res )
 	}
@@ -149,5 +182,152 @@ function returnFile( path, res ) {
 
 }
 
+// if email exists
+function checkEmail( email, res ) {
 
+	const collection = DB.collection( 'users' )
+	findUser( { email : email }, collection, function( user ) {
+		console.log( user )
+		res.writeHead( 200, {"Content-Type": "text/plain"} )
+		res.end( )
+	})
+
+}
+
+// on signIn request
+function signIn( userdata, res ) {
+	const collection = DB.collection( 'users' )
+
+	findUser( { email : userdata.email }, collection, function( user ) {
+		if ( user == null ) {
+			res.writeHead( 404, { "Content-Type": "text/plain" } )
+			res.end( )
+		} else {
+			// compare passwd sent and passwd stored
+			console.log( CRYPTO.createHash( 'sha256' ).update( userdata.password ).digest( 'hex' ), userdata.password, user.password )
+			let passwordHashFromUser = CRYPTO.createHash( 'sha256' )
+				.update( userdata.password )
+				.digest( 'hex' )
+
+			if ( passwordHashFromUser != user.password ) {
+				res.writeHead( 403, { "Content-Type": "text/plain" } )
+				res.end( )
+				return
+			}
+
+			// user's data to show on front end
+			let data = {
+				email: user.email,
+				username: user.username,
+				galaxies: user.galaxies,
+				currentTasks: user.currentTasks,
+			}
+
+			res.writeHead( 200, {
+				"Set-Cookie": "alauth=" + user._id.toString( ),
+				"Content-Type": "text/plain"
+			} )
+			res.write( JSON.stringify( data ) )
+			res.end( )
+		}
+	})
+
+}
+
+// on signUp request
+function signUp( newUserdata, res ) {
+
+	const collection = DB.collection( 'users' )
+
+	// finds user in user collection.
+	// if user exists reqpond 410,
+	// else add user to the collection; respond 200
+	findUser( { email : newUserdata.email }, collection, function( user ) {
+		if ( user ) {
+			res.writeHead( 410, { "Content-Type": "text/plain" } )
+			res.end( )
+		} else {
+			// user object
+			let newUser = {
+				email : newUserdata.email,
+				password : CRYPTO.createHash( 'sha256' )
+					.update( newUserdata.password )
+					.digest( 'hex' ),
+				username : newUserdata.username,
+				galaxies : [],
+				currentTasks: [],
+			}
+
+			// incerts user
+			insertUser( newUser, collection, function( result ) {
+				// result is null if there's an error
+				if (! result ) {
+					res.writeHead( 400, { "Content-Type": "plain/text" } )
+					res.end( )
+				} else {
+					console.log( result, result.ops[0]._id )
+					let data = {
+						email: result.ops[0].email,
+						username: result.ops[0].email,
+						galaxies: result.ops[0].galaxies,
+						currentTasks: result.ops[0].currentTasks,
+					}
+
+					res.writeHead( 200, {
+						"Set-Cookie": "alauth=" + result.ops[0]._id.toString( ),
+						"Content-Type": "plain/text",
+					})
+					res.write( JSON.stringify( data ) )
+					res.end( )
+				}
+			})
+		}
+	})
+}
+
+// finds user by query provided
+function findUser( query, collection, callback ) {
+	// finds user returns it to callback
+	collection.findOne( query, function( err, data ) {
+		if ( err ) {
+			callback( null )
+		} else {
+			callback( data )
+		}
+	})
+}
+
+// insert users to collection
+function insertUser( newUser, collection, callback ) {
+	// incerts a new user
+	collection.insert( newUser, function( err, res ) {
+		if ( err ) {
+			callback( null )
+		} else {
+			callback( res )
+		}
+	})
+}
+
+
+
+
+/* DEBUGGING ONLY */
+
+function getAllUsers( callback ) {
+
+	const collection = DB.collection( 'users' )
+
+	collection.find( ).toArray( function( err, data ) {
+		if ( err ) {
+			callback( { error : err } )
+		} else {
+			callback( { records : data } )
+		}
+
+	})
+
+}
+
+/* DEBUGGING ONLY */
 
