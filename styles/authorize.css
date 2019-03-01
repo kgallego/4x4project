@@ -1,0 +1,75 @@
+* {
+    --clr-0: #26232A;
+	--clr-1: rgb(143, 142, 156);
+	--clr-2: #FDEAFE;
+	--clr-3: #00C8A2;
+	--clr-4: #4E8079;
+	--clr-5: #FEF251;
+	--clr-6: rgb(45, 45, 73);
+	--clr-7: rgb(35, 35, 63);
+	--clr-8: rgb(0, 0, 24);
+	--clr-9: rgb(0, 0, 75);
+	--clr-10: rgb(105, 0, 128);
+
+    height: 100vh;
+    width: 100vw;
+
+    margin: 0;
+    padding: 0;
+
+    font-family: Poiret One;
+    font-size: 15pt;
+}
+
+form {
+    background-image: url('../images/loginbg.svg');
+    padding-top: 100px;
+    text-align: center;
+}
+
+p {
+    background: var(--clr-6);
+    color: var(--clr-1);
+
+    height: 30px;
+    width: 310px;
+
+    margin: auto;
+    padding: 20px 20px;
+    display: block;
+
+    text-align: left;
+    font-weight: bold;
+}
+
+input.textfield {
+    background: var(--clr-7);
+    color: var(--clr-1);
+
+    height: 80px;
+    width: 350px;
+
+    margin: auto;
+    padding: 20px;
+    border: none;
+
+    text-align: left;
+}
+
+
+input.button {
+    background-image: linear-gradient(to right, var(--clr-9), var(--clr-10));
+    color: var(--clr-1);
+
+    height: 60px;
+    width: 300px;
+
+    margin-top: 1em;
+
+    border: none;
+    border-radius: 30px;
+}
+
+input.button:hover {
+    border: 2px solid var(--clr-1);
+}
