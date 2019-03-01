@@ -1,0 +1,55 @@
+#email * {
+    --clr-0: #26232A;
+	--clr-1: #4A4452;
+	--clr-2: #FDEAFE;
+	--clr-3: #00C8A2;
+	--clr-4: #4E8079;
+	--clr-5: #FEF251;
+	--clr-6: rgb(45, 45, 73);
+	--clr-7: rgb(35, 35, 63);
+
+    margin: 0;
+    padding: 0;
+    background: var(--clr-0);
+}
+
+#email {
+    text-align: center;
+
+    font-size: 20pt;
+}
+
+#email form#emailForm {
+    width: 60%;
+    margin: auto;
+    padding: 1em;
+}
+
+#email input.textfield, p {
+    background: var(--clr-7);
+    color: var(--clr-2);
+    height: 50px;
+    width: 300px;
+
+    padding: 10px;
+
+    border: none;
+}
+
+#email p {
+    background: var(--clr-6);
+    padding: auto;
+}
+
+#email input.button {
+    background: var(--clr-7);
+    color: white;
+
+    height: 50px;
+    width: 300px;
+
+    margin-top: 1em;
+
+    border: none;
+    border-radius: 20px;
+}
