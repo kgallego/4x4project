@@ -1,0 +1,25 @@
+#email {
+    text-align: center;
+}
+
+#email p {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+#email form#emailForm {
+    width: 60%;
+    margin: auto;
+    padding: 1em;
+    border: 1px solid black;
+    text-align: left;
+}
+
+#email input.textfield {
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+}
+
+#email input.button {
+    margin-top: 1em;
+}

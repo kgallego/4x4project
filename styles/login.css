@@ -1,0 +1,25 @@
+#login {
+    text-align: center;
+}
+
+#login p {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+#login form#loginForm {
+    width: 60%;
+    margin: auto;
+    padding: 1em;
+    border: 1px solid black;
+    text-align: left;
+}
+
+#login input.textfield {
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+}
+
+#login input.button {
+    margin-top: 1em;
+}

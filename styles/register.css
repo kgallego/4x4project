@@ -1,0 +1,25 @@
+#register {
+    text-align: center;
+}
+
+#register p {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+#register form#registerForm {
+    width: 60%;
+    margin: auto;
+    padding: 1em;
+    border: 1px solid black;
+    text-align: left;
+}
+
+#register input.textfield {
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+}
+
+#register input.button {
+    margin-top: 1em;
+}
